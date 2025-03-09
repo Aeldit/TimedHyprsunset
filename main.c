@@ -1,3 +1,4 @@
+#include <pthread.h>
 #include <stdlib.h>
 #include <threads.h>
 #include <time.h>
@@ -27,7 +28,7 @@ char streq(char *a, char *b)
     return 1;
 }
 
-struct hm strtoint(char *s)
+struct hm strtohm(char *s)
 {
     if (!s)
     {
@@ -69,8 +70,20 @@ struct hm strtoint(char *s)
             }
             break;
         }
+
+        // In case the given time is not in the form 'HH:MM'
+        if (i > 5)
+        {
+            break;
+        }
     }
     return (struct hm){ .h = h, .m = m };
+}
+
+void *launch_sunset(void *arg)
+{
+    system("hyprsunset -t 3500");
+    return 0;
 }
 
 int main(int argc, char *argv[])
@@ -92,11 +105,11 @@ int main(int argc, char *argv[])
 
         if (streq(arg, "--start") && i + 1 < argc)
         {
-            start = strtoint(argv[i + 1]);
+            start = strtohm(argv[++i]);
         }
         else if (streq(arg, "--stop") && i + 1 < argc)
         {
-            stop = strtoint(argv[i + 1]);
+            stop = strtohm(argv[++i]);
         }
     }
 
@@ -110,18 +123,24 @@ int main(int argc, char *argv[])
         time(&rawtime);
         timeinfo = localtime(&rawtime);
 
-        int th = timeinfo->tm_hour;
-        int tm = timeinfo->tm_min;
+        int h = timeinfo->tm_hour;
+        int m = timeinfo->tm_min;
 
-        if (sunset && (th > stop.h || (stop.h == th && tm >= stop.m)))
+        if (sunset
+            && ((h > stop.h && h < start.h) || (h == stop.h && m >= stop.m)
+                || (h == start.h && m < start.m)))
         {
             sunset = 0;
-            system("pkill hyprsunset >/dev/null 2>&1");
+            system("pkill hyprsunset");
         }
-        else if (!sunset && (th > start.h || (start.h == th && tm >= start.m)))
+        else if (!sunset
+                 && ((h > start.h && h < stop.h)
+                     || (h == start.h && m >= start.m)
+                     || (h == stop.h && m < stop.m)))
         {
             sunset = 1;
-            system("hyprsunset -t 3500 >/dev/null 2>&1");
+            pthread_t thread_id;
+            pthread_create(&thread_id, NULL, launch_sunset, NULL);
         }
 
         thrd_sleep(&(struct timespec){ .tv_sec = 300 }, NULL); // sleep 5 min

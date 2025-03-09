@@ -1,10 +1,10 @@
 CC=gcc
-CFLAGS=-W -Wall -Werror -std=c11 -pedantic
+CFLAGS=-W -Wall -Werror -std=c11 -pedantic -Wno-unused-parameter
 
 TARGET=timed-sunset
 
 all: build
-	./$(TARGET) --start 18:00 --stop 8
+	./$(TARGET) --start 18:00 --stop 1:32
 
 build:
 	$(CC) $(CFLAGS) main.c -o $(TARGET)
