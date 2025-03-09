@@ -77,6 +77,14 @@ struct hm strtohm(char *s)
             break;
         }
     }
+    if (h > 24 || h < 0)
+    {
+        h = 0;
+    }
+    if (m > 60 || m < 0)
+    {
+        m = 0;
+    }
     return (struct hm){ .h = h, .m = m };
 }
 
