@@ -1,7 +1,6 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <threads.h>
-#include <time.h>
 
 struct hm
 {
@@ -121,10 +120,17 @@ int main(int argc, char *argv[])
         }
     }
 
+    // If the stop time is after the start time
+    if (stop.h > start.h || (stop.h == start.h && stop.m >= start.m))
+    {
+        return 2;
+    }
+
     time_t rawtime;
     struct tm *timeinfo;
 
     char sunset = 0;
+    system("pkill hyprsunset");
 
     while (1)
     {
@@ -141,17 +147,14 @@ int main(int argc, char *argv[])
             sunset = 0;
             system("pkill hyprsunset");
         }
-        else if (!sunset
-                 && ((h > start.h && h < stop.h)
-                     || (h == start.h && m >= start.m)
-                     || (h == stop.h && m < stop.m)))
+        else if (!sunset && (h > start.h || (h == start.h && m >= start.m)))
         {
             sunset = 1;
             pthread_t thread_id;
             pthread_create(&thread_id, NULL, launch_sunset, NULL);
         }
 
-        thrd_sleep(&(struct timespec){ .tv_sec = 300 }, NULL); // sleep 5 min
+        thrd_sleep(&(struct timespec){ .tv_sec = 5 }, NULL); // sleep 5 min
     }
     return 0;
 }
