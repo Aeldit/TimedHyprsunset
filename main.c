@@ -8,7 +8,7 @@ struct hm
     int m;
 };
 
-char streq(char *a, char *b)
+char streq(const char *const a, const char *const b)
 {
     if (!a || !b)
     {
@@ -27,14 +27,14 @@ char streq(char *a, char *b)
     return 1;
 }
 
-struct hm strtohm(char *s)
+struct hm strtohm(const char *const s)
 {
     if (!s)
     {
         return (struct hm){ .h = 0, .m = 0 };
     }
 
-    unsigned long i = 0;
+    unsigned char i = 0;
     int h = 0;
     int m = 0;
     char is_in_h = 1;
@@ -104,17 +104,17 @@ int main(int argc, char *argv[])
     struct hm stop = (struct hm){ .h = 8, .m = 0 };
     for (int i = 1; i < argc; ++i)
     {
-        char *arg = argv[i];
+        const char *const arg = argv[i];
         if (!arg)
         {
             continue;
         }
 
-        if (streq(arg, "--start") && i + 1 < argc)
+        if (streq("--start", arg) && i + 1 < argc)
         {
             start = strtohm(argv[++i]);
         }
-        else if (streq(arg, "--stop") && i + 1 < argc)
+        else if (streq("--stop", arg) && i + 1 < argc)
         {
             stop = strtohm(argv[++i]);
         }
