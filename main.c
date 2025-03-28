@@ -35,10 +35,10 @@ struct hm strtohm(const char *const s)
     }
 
     unsigned char i = 0;
-    int h = 0;
-    int m = 0;
-    char is_in_h = 1;
-    char c = 0;
+    int h           = 0;
+    int m           = 0;
+    char is_in_h    = 1;
+    char c          = 0;
     while ((c = s[i++]))
     {
         switch (c)
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
     }
 
     struct hm start = (struct hm){ .h = 18, .m = 0 };
-    struct hm stop = (struct hm){ .h = 8, .m = 0 };
+    struct hm stop  = (struct hm){ .h = 8, .m = 0 };
     for (int i = 1; i < argc; ++i)
     {
         const char *const arg = argv[i];
@@ -147,7 +147,9 @@ int main(int argc, char *argv[])
             sunset = 0;
             system("pkill hyprsunset");
         }
-        else if (!sunset && (h > start.h || (h == start.h && m >= start.m)))
+        else if (!sunset
+                 && (h > start.h || (h == start.h && m >= start.m) || h < stop.h
+                     || (h == stop.h && m < stop.m)))
         {
             sunset = 1;
             pthread_t thread_id;
