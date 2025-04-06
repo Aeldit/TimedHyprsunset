@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-W -Wall -Werror -std=c11 -pedantic -Wno-unused-parameter
+CFLAGS=-W -Wall -Werror -std=c11 -pedantic -Wno-unused-parameter -O2
 
 TARGET=timed-sunset
 
