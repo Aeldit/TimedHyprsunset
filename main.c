@@ -100,6 +100,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // Set default values
     struct hm start = (struct hm){ .h = 18, .m = 0 };
     struct hm stop  = (struct hm){ .h = 8, .m = 0 };
     for (int i = 1; i < argc; ++i)
@@ -156,7 +157,7 @@ int main(int argc, char *argv[])
             pthread_create(&thread_id, NULL, launch_sunset, NULL);
         }
 
-        thrd_sleep(&(struct timespec){ .tv_sec = 5 }, NULL); // sleep 5 min
+        thrd_sleep(&(struct timespec){ .tv_sec = 300 }, NULL); // sleep 5 min
     }
     return 0;
 }
