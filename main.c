@@ -15,7 +15,7 @@ char streq(const char *const a, const char *const b)
         return 0;
     }
 
-    unsigned long i = 0;
+    unsigned char i = 0;
     while (a[i] && b[i])
     {
         if (a[i] != b[i])
