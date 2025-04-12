@@ -8,13 +8,16 @@ struct hm
     int m;
 };
 
-char streq(const char *const a, const char *const b)
+unsigned char streq(const char *const a, const char *const b)
 {
     if (!a || !b)
     {
         return 0;
     }
 
+    // We use an unsigned char because this function is only called with
+    // "--start" and "--stop", so we know the max number will never be greater
+    // than 7
     unsigned char i = 0;
     while (a[i] && b[i])
     {
@@ -31,7 +34,7 @@ struct hm strtohm(const char *const s)
 {
     if (!s)
     {
-        return (struct hm){ .h = 0, .m = 0 };
+        return (struct hm){ 0 };
     }
 
     unsigned char i = 0;
