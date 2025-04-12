@@ -7,7 +7,7 @@ all: build
 	./$(TARGET) --start 19:30 --stop 8
 
 build:
-	$(CC) $(CFLAGS) main.c -o $(TARGET)
+	$(CC) $(CFLAGS) -O2 main.c -o $(TARGET)
 
 clean:
 	if [ -f "$(TARGET)" ]; then rm $(TARGET); fi
